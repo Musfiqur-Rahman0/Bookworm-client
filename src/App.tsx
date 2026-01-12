@@ -1,14 +1,13 @@
+import { RouterProvider } from "react-router"
+import router from "./routes/Router"
 
 
 function App() {
 
 
   return (
-    <>
-      <div> 
-        <h2>Hellow form bookworm</h2>
-      </div>
-    </>
+    <RouterProvider router={router} >
+    </RouterProvider>
   )
 }
 
