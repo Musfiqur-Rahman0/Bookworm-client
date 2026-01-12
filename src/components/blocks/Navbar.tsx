@@ -68,7 +68,7 @@ const Navbar = ({ className }: Navbar5Props) => {
 
   return (
     <section className={cn("py-4", className)}>
-      <div className="container">
+      <div className=" container ">
         <nav className="flex items-center justify-between">
           <a
             href="https://www.shadcnblocks.com"

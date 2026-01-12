@@ -7,9 +7,9 @@ import { Outlet } from "react-router";
 
 const Root = () => {
     return <>
-        <Navbar />
+        <Navbar className="flex items-center justify-center !py-5"/>
         <ScrollToTop/>
-        <main>
+        <main className="min-h-[calc(100vh-225px)]">
             <Outlet/>
         </main>
         <Footer/>
