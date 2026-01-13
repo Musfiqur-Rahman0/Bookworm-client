@@ -1,14 +1,14 @@
-import API from "@/api/Api";
-import { useState, useContext, createContext,  } from "react";
+import API, { setAccessToken } from "@/api/Api";
+import { useState, useContext, createContext, useEffect  } from "react";
 
 
 type User = { id: string; email: string; role: string };
 type AuthContextType = {
   user: User | null;
-  accessToken: string | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   refreshToken: () => Promise<void>;
+  loading : boolean | null;
 };
 type AuthProviderProps = { children: React.ReactNode };
 
@@ -26,8 +26,9 @@ export const useAuth = (): AuthContextType => {
 };
 
 function useProvideAuth(): AuthContextType {
-  const [accessToken, setAccessToken] = useState<string | null>(null);
+ 
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true)
 
   // LOGIN
   const login = async (email: string, password: string) => {
@@ -40,19 +41,29 @@ function useProvideAuth(): AuthContextType {
 
   // LOGOUT
   const logout = async () => {
-    await API.post("/logout"); // refresh cookie cleared
+    await API.post("/logout"); 
     setAccessToken(null);
     setUser(null);
   };
 
-  // REFRESH TOKEN
-  const refreshToken = async () => {
-    const res = await API.post("/refresh");
-    const { accessToken, user } = res.data as { accessToken: string; user: User };
-    setAccessToken(accessToken);
+    const refreshToken = async () => {
+        try {
+            const res = await API.post("/refresh");
+            setAccessToken(res?.data?.accessToken);
+            setUser(res?.data?.user);
+        } catch (error) {
+            setUser(null)
+            
+        }finally{
+            setLoading(false)
+        }
+    }
 
-    setUser(user);
-  };
 
-  return { accessToken, user, login, logout, refreshToken };
+    useEffect(()=> {
+        refreshToken()
+    }, [])
+
+
+  return {  user, login, logout,  refreshToken, loading};
 }
