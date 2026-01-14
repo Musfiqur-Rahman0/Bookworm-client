@@ -2,12 +2,14 @@ import API, { setAccessToken } from "@/api/Api";
 import { useState, useContext, createContext, useEffect  } from "react";
 
 
+
 type User = { id: string; email: string; role: "admin" | "user" };
 type AuthContextType = {
   user: User | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
   logout: () => Promise<void>;
   refreshToken: () => Promise<void>;
+  // signUp : ()=> Promise<void>;
   loading : boolean | null;
 };
 type AuthProviderProps = { children: React.ReactNode };
@@ -28,16 +30,30 @@ export const useAuth = (): AuthContextType => {
 function useProvideAuth(): AuthContextType {
  
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true);
+
+
+
+  // const signUp : (name : string, password : string, profile_picture : string) = async (nam)
+
 
   // LOGIN
-  const login = async (email: string, password: string) => {
+// useAuth.ts
+const login: (email: string, password: string) => Promise<User> = async (email, password) => {
+  try {
     const res = await API.post("/login", { email, password });
     const { accessToken, user } = res.data as { accessToken: string; user: User };
+
     setAccessToken(accessToken);
-    console.log(user)
     setUser(user);
-  };
+
+    return user; // return user so parent component can handle navigation
+  } catch (error: any) {
+    console.error(error);
+    throw new Error(error.response?.data?.message || "Login failed");
+  }
+};
+
 
   // LOGOUT
   const logout = async () => {
@@ -65,5 +81,5 @@ function useProvideAuth(): AuthContextType {
     }, [])
 
 
-  return {  user, login, logout,  refreshToken, loading};
+  return {  user, login, logout,   refreshToken, loading};
 }

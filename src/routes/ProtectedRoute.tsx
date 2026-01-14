@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router";
-
+import type { ReactNode } from "react";
 
 
 type UserRole = "user" | "admin";

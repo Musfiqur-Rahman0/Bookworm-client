@@ -7,6 +7,7 @@ import Error from "@/pages/Error";
 import ProtectedRoute from "./ProtectedRoute";
 import { createBrowserRouter } from "react-router";
 import { unauthozied } from "@/pages/auth/unauthozied";
+import { User } from "@/pages/Dashboard/User";
 
 const router = createBrowserRouter([
   {
@@ -16,11 +17,18 @@ const router = createBrowserRouter([
         <Root />
       </ProtectedRoute>
     ),
+
     children: [
       {
         path: "admin-dashboard",
-        Component: Admin,
+        element: <ProtectedRoute allowedRoles={["admin"]}>
+          <Admin/>
+        </ProtectedRoute>
       },
+      {
+        path : "/user-dashboard",
+        element : <ProtectedRoute allowedRoles={["user"]}> <User/></ProtectedRoute>
+      }
     ],
   },
   {
@@ -35,6 +43,7 @@ const router = createBrowserRouter([
     path: "/unauthorized",
     Component: unauthozied,
   },
+  
   {
     path: "*",
     Component: Error,
