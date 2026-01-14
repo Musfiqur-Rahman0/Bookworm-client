@@ -2,7 +2,7 @@ import API, { setAccessToken } from "@/api/Api";
 import { useState, useContext, createContext, useEffect  } from "react";
 
 
-type User = { id: string; email: string; role: string };
+type User = { id: string; email: string; role: "admin" | "user" };
 type AuthContextType = {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;

@@ -1,20 +1,15 @@
-// routes/RoleRoute.tsx
-
 import { useAuth } from "@/hooks/useAuth";
-import type { ReactNode } from "react";
 import { Navigate } from "react-router";
 
-type userRoles = "user" | "admin"
 
 
-
-
+type UserRole = "user" | "admin";
 interface RoleRouteProps {
-  allowedRoles: userRoles;
+  allowedRoles: UserRole[];
   children: ReactNode;
 }
 
-const RoleRoute = ({ allowedRoles, children }: RoleRouteProps) => {
+const ProtectedRoute = ({ allowedRoles, children }: RoleRouteProps) => {
   const { user, loading } = useAuth();
 
   if (loading) return null;
@@ -23,11 +18,9 @@ const RoleRoute = ({ allowedRoles, children }: RoleRouteProps) => {
     return <Navigate to="/login" replace />;
   }
 
-  if (!allowedRoles.includes(user?.role )) {
+  if (!allowedRoles.includes(user.role)) {
     return <Navigate to="/unauthorized" replace />;
   }
-
   return <>{children}</>;
 };
-
-export default RoleRoute;
+export default ProtectedRoute;
