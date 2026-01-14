@@ -39,7 +39,6 @@ const LogInComponent = ({
     <section className={cn("h-screen bg-muted", className)}>
       <div className="flex h-full items-center justify-center">
         <div className="flex flex-col items-center gap-6 lg:justify-start">
-          
           <a href={logo?.url}>
             <img
               src={logo?.src}
